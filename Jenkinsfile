@@ -37,7 +37,7 @@ pipeline {
         }
         
         //Stage 4:
-        
+        /*
         stage ('Print Environment Variables') {
             steps {
                 echo "Artifact ID is '${ArtifactId}'"
@@ -46,7 +46,7 @@ pipeline {
                 echo "Name is '${Name}'"
             }
         }
-        
+        */
         
         
         //Stage5: Deploying

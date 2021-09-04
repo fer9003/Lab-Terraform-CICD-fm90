@@ -6,6 +6,7 @@ pipeline {
         maven 'maven'
     }
     
+    /*
     environment {
         ArtifactId = readMavenPom().getArtifactId()
         Version = readMavenPom().getVersion()
@@ -13,6 +14,7 @@ pipeline {
         GroupId = readMavenPom().getGroupId()
     }
 
+*/
 
     stages {
         //stage 1: Build

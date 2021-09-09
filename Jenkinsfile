@@ -40,7 +40,7 @@ pipeline {
                     file: "target/${ArtifactId}-${Version}.war", 
                     type: 'war']], credentialsId: 'd3a7bf80-25b4-45f7-8c13-ed17743b4356', 
                     groupId: "${GroupId}", 
-                    nexusUrl: '172.20.10.124:8081', 
+                    nexusUrl: '172.20.10.216:8081', 
                     nexusVersion: 'nexus3', 
                     protocol: 'http', 
                     repository: "${NexusRepo}", 
@@ -62,8 +62,8 @@ pipeline {
         
         
         
-        //Stage5: Deploying
-        stage ('Deploy') {
+        //Stage5: Deploying the build artifact to Apache Tomcat
+        stage ('Deploy to TomCat') {
             steps {
                 echo 'Deploying....'
                 sshPublisher(publishers: 
@@ -82,5 +82,28 @@ pipeline {
                     ])
             }
         }
+
+          //Stage6: Deploying the build artifact to Docker
+        stage ('Deploy to Docker') {
+            steps {
+                echo 'Deploying....'
+                sshPublisher(publishers: 
+                [sshPublisherDesc(
+                    configName: 'AnsibleController',
+                    transfers: [
+                        sshTransfer(
+                            cleanRemote: false,
+                            execCommand: 'ansible-playbook /opt/playbooks/downloadanddeploy_docker.yaml -i /opt/playbooks/hosts',
+                            execTimeout: 120000
+                        )
+                    ],
+                    usePromotionTimestamp: false,
+                    useWorkspaceInPromotion: false,
+                    verbose: false)
+                    ])
+            }
+        }
+
     }
 }
+
